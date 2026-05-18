@@ -101,3 +101,6 @@ action:
       - conditions:
           - '{{ command == ''remote_button_double_press'' and endpoint_id == 3 }}'
         sequence: !input 'button_three_double_press'
+      - conditions:
+          - '{{ command == ''remote_button_long_press'' and endpoint_id == 3 }}'
+        sequence: !input 'button_three_long_press'
