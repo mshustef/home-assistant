@@ -1,7 +1,6 @@
 blueprint:
   name: ZHA - Tuya TS0043 3 button remote
-  description: Automate your Tuya TS0043 3 button remote using
-    ZHA events.
+  description: Automate your Tuya TS0043 3 button remote using ZHA events.
   domain: automation
   input:
     tuya_ts0043:
@@ -24,6 +23,12 @@ blueprint:
       default: []
       selector:
         action: {}
+    button_one_long_press:
+      name: Button 1 (long press)
+      description: Action to run on button 1 long press
+      default: []
+      selector:
+        action: {}
     button_two_single_press:
       name: Button 2 (single press)
       description: Action to run on button 2 single press
@@ -33,6 +38,12 @@ blueprint:
     button_two_double_press:
       name: Button 2 (double press)
       description: Action to run on button 2 double press
+      default: []
+      selector:
+        action: {}
+    button_two_long_press:
+      name: Button 2 (long press)
+      description: Action to run on button 2 long press
       default: []
       selector:
         action: {}
@@ -48,33 +59,45 @@ blueprint:
       default: []
       selector:
         action: {}
+    button_three_long_press:
+      name: Button 3 (long press)
+      description: Action to run on button 3 long press
+      default: []
+      selector:
+        action: {}
 mode: restart
 max_exceeded: silent
 trigger:
-- platform: event
-  event_type: zha_event
-  event_data:
-    device_id: !input 'tuya_ts0043'
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: !input 'tuya_ts0043'
 action:
   - variables:
       command: '{{ trigger.event.data.command }}'
       endpoint_id: '{{ trigger.event.data.endpoint_id }}'
   - choose:
-    - conditions:
-        - '{{ command == ''remote_button_short_press'' and endpoint_id == 1 }}'
-      sequence: !input 'button_one_single_press'
-    - conditions:
-        - '{{ command == ''remote_button_double_press'' and endpoint_id == 1 }}'
-      sequence: !input 'button_one_double_press'
-    - conditions:
-        - '{{ command == ''remote_button_short_press'' and endpoint_id == 2 }}'
-      sequence: !input 'button_two_single_press'
-    - conditions:
-        - '{{ command == ''remote_button_double_press'' and endpoint_id == 2 }}'
-      sequence: !input 'button_two_double_press'
-    - conditions:
-        - '{{ command == ''remote_button_short_press'' and endpoint_id == 3 }}'
-      sequence: !input 'button_three_single_press'
-    - conditions:
-        - '{{ command == ''remote_button_double_press'' and endpoint_id == 3 }}'
-      sequence: !input 'button_three_double_press'
+      - conditions:
+          - '{{ command == ''remote_button_short_press'' and endpoint_id == 1 }}'
+        sequence: !input 'button_one_single_press'
+      - conditions:
+          - '{{ command == ''remote_button_double_press'' and endpoint_id == 1 }}'
+        sequence: !input 'button_one_double_press'
+      - conditions:
+          - '{{ command == ''remote_button_long_press'' and endpoint_id == 1 }}'
+        sequence: !input 'button_one_long_press'
+      - conditions:
+          - '{{ command == ''remote_button_short_press'' and endpoint_id == 2 }}'
+        sequence: !input 'button_two_single_press'
+      - conditions:
+          - '{{ command == ''remote_button_double_press'' and endpoint_id == 2 }}'
+        sequence: !input 'button_two_double_press'
+      - conditions:
+          - '{{ command == ''remote_button_long_press'' and endpoint_id == 2 }}'
+        sequence: !input 'button_two_long_press'
+      - conditions:
+          - '{{ command == ''remote_button_short_press'' and endpoint_id == 3 }}'
+        sequence: !input 'button_three_single_press'
+      - conditions:
+          - '{{ command == ''remote_button_double_press'' and endpoint_id == 3 }}'
+        sequence: !input 'button_three_double_press'
